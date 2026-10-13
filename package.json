@@ -1,0 +1,18 @@
+{
+  "name": "secured-vault-contracts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy": "hardhat run scripts/deploy.js --network localhost",
+    "client": "npm start --prefix client",
+    "client:build": "npm run build --prefix client",
+    "client:test": "npm test --prefix client -- --watchAll=false"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "hardhat": "^2.22.18"
+  }
+}
