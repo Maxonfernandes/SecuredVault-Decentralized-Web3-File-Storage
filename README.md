@@ -6,7 +6,6 @@ The platform combines decentralized storage with blockchain-based access managem
 
 **Technology Stack:** Solidity, Hardhat, React, Ethers.js, IPFS, Pinata, and MetaMask.
 
-[![Solidity](https://img.shields.io/badge/Solidity-0.8.9-363636?logo=solidity)](https://soliditylang.org/) [![Hardhat](https://img.shields.io/badge/Hardhat-2.22-FFF100?logo=ethereum)](https://hardhat.org/) [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev/) [![IPFS](https://img.shields.io/badge/Storage-IPFS%20%2F%20Pinata-65C9C6?logo=ipfs)](https://pinata.cloud/) [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ---
 
