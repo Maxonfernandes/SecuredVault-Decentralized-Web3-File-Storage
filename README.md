@@ -1,247 +1,242 @@
-# 🛡️ SecuredVault: Decentralized Web3 File Storage & Access Management
+# SecuredVault — Decentralized File Storage and Access Management
 
-[![Solidity](https://img.shields.io/badge/Solidity-0.8.9-363636?logo=solidity)](https://soliditylang.org/)
-[![Hardhat](https://img.shields.io/badge/Hardhat-2.22-FFF100?logo=ethereum)](https://hardhat.org/)
-[![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://reactjs.org/)
-[![IPFS](https://img.shields.io/badge/IPFS-Pinata-65C9C6?logo=ipfs)](https://pinata.cloud/)
-[![Ethers.js](https://img.shields.io/badge/Ethers.js-v5.7-2535a0)](https://docs.ethers.org/v5/)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+**SecuredVault** is a decentralized file storage platform built using Ethereum, IPFS, and React. It enables users to upload files to IPFS, manage file ownership through a Solidity smart contract, and share or revoke access for specific Ethereum addresses.
 
-**SecuredVault** is a decentralized cloud storage platform (Web3 Google Drive) built on **Ethereum** and **IPFS (via Pinata)**. It allows users to upload any type of file permanently to the InterPlanetary File System (IPFS) and govern granular access permissions via a Solidity smart contract.
+The platform combines decentralized storage with blockchain-based access management to provide a transparent and user-controlled file-sharing experience.
 
----
+**Technology Stack:** Solidity, Hardhat, React, Ethers.js, IPFS, Pinata, and MetaMask.
 
-## 🌟 Key Features
-
-- **🌐 Decentralized Storage**: Files are permanently pinned to IPFS using Pinata Cloud, eliminating single points of failure.
-- **🔐 On-Chain Access Control**: Cryptographically manages file ownership and access permissions directly on Ethereum.
-- **🤝 Granular File Sharing**: Grant view access to specific Ethereum addresses (`allow`) without revealing private keys.
-- **🚫 Instant Permission Revocation**: Revoke view access from any address at any time with a single transaction (`disallow`).
-- **🖼️ Built-in Vault Explorer**: Interactive grid gallery featuring previews for images, file download triggers, IPFS gateway links, and copyable CIDs.
-- **⚡ Reactive Glassmorphic UI**: High-performance dark-mode interface built with React 18, featuring drag-and-drop file upload, real-time transaction status, and network detection.
+[![Solidity](https://img.shields.io/badge/Solidity-0.8.9-363636?logo=solidity)](https://soliditylang.org/) [![Hardhat](https://img.shields.io/badge/Hardhat-2.22-FFF100?logo=ethereum)](https://hardhat.org/) [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react)](https://react.dev/) [![IPFS](https://img.shields.io/badge/Storage-IPFS%20%2F%20Pinata-65C9C6?logo=ipfs)](https://pinata.cloud/) [![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ---
 
-## 🏗️ Architecture Overview
+## Key Features
+
+* **Decentralized Storage:** Upload and pin files to IPFS using Pinata.
+* **Blockchain-Based Access Control:** Manage file ownership and sharing permissions through a Solidity smart contract.
+* **File Sharing:** Grant selected Ethereum addresses permission to access files.
+* **Access Revocation:** Revoke previously granted permissions through a blockchain transaction.
+* **Vault Explorer:** Browse uploaded files, preview supported images, download files, and access IPFS links.
+* **Web3 Integration:** Connect MetaMask to interact with the smart contract and approve transactions.
+* **Responsive Interface:** A dark-themed React interface with file uploads and transaction status updates.
+
+## Architecture Overview
+
+The following diagram illustrates the file upload and storage process, including the interaction between the React frontend, Pinata IPFS, MetaMask, and the Ethereum smart contract.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User as 👤 User / MetaMask
-    participant UI as 💻 React Frontend
-    participant Pinata as 📦 Pinata IPFS
-    participant Contract as 📜 Upload.sol (Ethereum)
+    actor User as User / MetaMask
+    participant UI as React Frontend
+    participant IPFS as Pinata IPFS
+    participant SC as Upload.sol (Ethereum)
 
-    User->>UI: Selects file to upload
-    UI->>Pinata: POST /pinning/pinFileToIPFS (FormData)
-    Pinata-->>UI: Returns IPFS CID (Hash)
-    UI->>User: Prompts MetaMask to confirm `contract.add(account, url)`
-    User->>Contract: Signs & broadcasts transaction
-    Contract-->>UI: FileAdded event & receipt confirmed
-    UI->>User: Updates Vault Explorer with new file card
+    User->>UI: Select file
+    UI->>IPFS: Upload file
+    IPFS-->>UI: Return IPFS CID
+    UI->>User: Request transaction approval
+    User->>SC: Sign and submit transaction
+    SC-->>UI: Emit FileAdded event
+    UI->>UI: Update Vault Explorer
 ```
 
----
+## Prerequisites
 
-## 📋 Prerequisites
+Ensure the following are installed or configured before running the project:
 
-Before getting started, make sure you have:
+1. **Node.js:** Version 18, 20, or 22.
+2. **MetaMask:** Browser extension for connecting an Ethereum wallet.
+3. **Pinata Account:** Used to upload and pin files on IPFS.
+4. **Git:** For cloning and managing the repository.
 
-1. **Node.js**: `v18.x`, `v20.x`, or `v22.x` ([Download Node.js](https://nodejs.org/))
-2. **MetaMask Extension**: Installed in your browser ([Download MetaMask](https://metamask.io/))
-3. **Pinata Account**: Free account for IPFS pinning ([Sign up for Pinata](https://app.pinata.cloud/register))
+## Configuration
 
----
+### 1. Configure Pinata
 
-## ⚙️ Configuration Setup
+1. Sign in to the [Pinata Dashboard](https://app.pinata.cloud/).
+2. Navigate to [API Keys](https://app.pinata.cloud/developers/api-keys).
+3. Create an API key with the required file-pinning permissions.
+4. Copy the API credentials and configure the frontend environment variables.
 
-### 1. Pinata IPFS Configuration
-To pin files to IPFS, get your API credentials from Pinata:
-
-1. Log into your [Pinata Dashboard](https://app.pinata.cloud/).
-2. Navigate to **API Keys** under Developers (`https://app.pinata.cloud/developers/api-keys`).
-3. Click **New Key**.
-4. Enable **Admin permissions** or ensure `pinFileToIPFS` is checked.
-5. Copy your **API Key** and **API Secret**.
-6. In the `client/` folder, create a `.env` file (you can copy from `client/.env.example`):
+Create the environment file:
 
 ```bash
 cp client/.env.example client/.env
 ```
 
-Open `client/.env` and update the keys:
+Update `client/.env` with your credentials:
+
 ```env
-REACT_APP_PINATA_API_KEY=your_actual_pinata_api_key_here
-REACT_APP_PINATA_SECRET_API_KEY=your_actual_pinata_secret_key_here
+REACT_APP_PINATA_API_KEY=your_pinata_api_key
+REACT_APP_PINATA_SECRET_API_KEY=your_pinata_secret_key
 REACT_APP_PINATA_GATEWAY=https://gateway.pinata.cloud/ipfs/
 ```
 
----
+**Security note:** These environment variables are embedded in a client-side React application and must not contain privileged or administrative API secrets in a deployed production build. Use a backend service to handle authenticated Pinata uploads securely.
 
-### 2. MetaMask Network & Account Setup
+### 2. Configure MetaMask
 
-When running a local Hardhat blockchain, configure MetaMask as follows:
+To connect MetaMask to the local Hardhat blockchain, configure the following network:
 
-#### Step A: Add Hardhat Local Network to MetaMask
-1. Open the MetaMask extension.
-2. Click the **Network selector dropdown** (top left) and click **Add a network manually**.
-3. Fill in the network details:
-   - **Network Name**: `Hardhat Localhost`
-   - **New RPC URL**: `http://127.0.0.1:8545`
-   - **Chain ID**: `31337` *(or `1337` if prompted)*
-   - **Currency Symbol**: `ETH`
-4. Click **Save** and switch to this network.
+| Setting         | Value                   |
+| --------------- | ----------------------- |
+| Network Name    | Hardhat Localhost       |
+| RPC URL         | `http://127.0.0.1:8545` |
+| Chain ID        | `31337`                 |
+| Currency Symbol | `ETH`                   |
 
-#### Step B: Import a Pre-Funded Test Account
-1. When you run `npx hardhat node` (see below), Hardhat prints 20 test accounts with 10,000 test ETH each.
-2. Example Private Key for Account #0:
-   ```
-   0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-   ```
-3. In MetaMask, click your **Account icon** -> **Add account or hardware wallet** -> **Import account**.
-4. Paste the private key and click **Import**. You will now have 10,000 ETH to test transactions locally!
+Start the local blockchain using the instructions below. Hardhat will display test accounts and their private keys in the terminal.
 
----
+Import one of these test accounts into MetaMask for local development only.
 
-## 🚀 Quickstart: Running Locally
+**Important:** Never use Hardhat test accounts or their private keys on a public network or with real funds.
+
+## Getting Started
 
 ### Step 1: Install Dependencies
-Install dependencies for both the Hardhat backend and the React frontend:
+
+Run the following commands from the project root:
 
 ```bash
-# In the project root directory
 npm install
-
-# In the client directory
-cd client && npm install && cd ..
+cd client
+npm install
+cd ..
 ```
 
-### Step 2: Start Local Ethereum Node
-In your terminal, start the Hardhat local node:
+### Step 2: Start the Local Blockchain
+
+Open a terminal and run:
 
 ```bash
 npx hardhat node
 ```
-*Keep this terminal running. It will output test accounts and act as your local blockchain.*
 
-### Step 3: Deploy Smart Contract
-In a **new terminal tab/window**, deploy the `Upload` contract to your local node:
+Keep the terminal running while developing and testing the application.
+
+### Step 3: Deploy the Smart Contract
+
+Open another terminal in the project root:
 
 ```bash
 npm run deploy
 ```
-*This compiles the contract, deploys it to the local chain, and automatically saves the address into `client/src/artifacts/contract-address.json`.*
 
-### Step 4: Start the Frontend Application
-Start the React development server:
+This command deploys the `Upload` smart contract to the local Hardhat network. The deployment script is configured to save the contract address to:
+
+```text
+client/src/artifacts/contract-address.json
+```
+
+### Step 4: Start the Frontend
+
+Run:
 
 ```bash
 npm run client
 ```
-The application will automatically open in your browser at **`http://localhost:3000`**.
 
----
+Open the application at:
 
-## 🧪 Running Automated Tests
+http://localhost:3000
+
+Connect MetaMask to the local network and begin uploading and sharing files.
+
+## Testing
 
 ### Smart Contract Tests
-Run Hardhat unit tests to verify contract logic (`add`, `allow`, `disallow`, `display`, `shareAccess`):
+
+Run the Hardhat test suite:
 
 ```bash
 npm test
 ```
-*Outputs:*
-```
-  Upload Contract
-    File Upload (add)
-      ✔ Should allow a user to add a file URL for themselves
-      ✔ Should revert if URL is empty
-      ✔ Should prevent user from adding file to another user's vault
-    Access Control (allow & disallow)
-      ✔ Should prevent unauthorized users from viewing files
-      ✔ Should allow access after calling allow()
-      ✔ Should reject allow for self or zero address
-      ✔ Should revoke access after calling disallow()
-      ✔ Should return correct shareAccess list
 
-  8 passing (2s)
-```
+The tests cover:
+
+* File registration and URL validation.
+* Prevention of unauthorized file registration.
+* Access permission management.
+* Permission revocation.
+* Unauthorized file access.
+* Shared-access list validation.
+
+The repository includes eight smart contract tests covering these scenarios.
 
 ### Frontend Tests
-Run React testing-library tests:
+
+Run the frontend test suite using the configured npm script:
 
 ```bash
 npm run client:test
 ```
 
----
-
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
+SecuredVault/
 ├── contracts/
-│   └── Upload.sol            # Solidity contract (storage & access control)
+│   └── Upload.sol
 ├── scripts/
-│   └── deploy.js             # Deployment script with auto address export
+│   └── deploy.js
 ├── test/
-│   └── Upload.test.js        # Hardhat Chai test suite (8 tests)
+│   └── Upload.test.js
 ├── client/
-│   ├── .env.example          # Template for Pinata & contract env vars
-│   ├── public/               # Static assets & HTML template
+│   ├── .env.example
+│   ├── public/
 │   └── src/
-│       ├── artifacts/        # Compiled contract ABI & deployed address
+│       ├── artifacts/
 │       ├── components/
-│       │   ├── FileUpload.js # Pinata IPFS uploader & on-chain recorder
-│       │   ├── Display.js    # Vault Explorer & IPFS file viewer
-│       │   └── Modal.js      # Share & Access Control management modal
-│       ├── App.js            # Main dashboard component with web3 provider
-│       ├── App.css           # Modern glassmorphism styling
-│       └── index.css         # Typography, design tokens & dark theme
-├── hardhat.config.js         # Hardhat network configuration
-└── package.json              # Project scripts & devDependencies
+│       │   ├── FileUpload.js
+│       │   ├── Display.js
+│       │   └── Modal.js
+│       ├── App.js
+│       ├── App.css
+│       └── index.css
+├── hardhat.config.js
+└── package.json
 ```
 
----
+## Smart Contract Specification
 
-## 📜 Smart Contract Specification (`Upload.sol`)
+The `Upload.sol` contract manages file references and access permissions.
 
-| Function | Type | Description |
-|---|---|---|
-| `add(address _user, string memory url)` | `external` | Stores an IPFS file URL for the sender's account. Validates that `_user == msg.sender`. |
-| `allow(address user)` | `external` | Grants another Ethereum address permission to read the sender's files. |
-| `disallow(address user)` | `external` | Revokes view permission previously granted to an address. |
-| `display(address _user)` | `external view` | Returns an array of file URLs for `_user`. Reverts with `"You don't have access"` if unauthorized. |
-| `shareAccess()` | `external view` | Returns the list of addresses the caller has interacted with and their current access status. |
+| Function                                | Description                                                                       |
+| --------------------------------------- | --------------------------------------------------------------------------------- |
+| `add(address _user, string memory url)` | Registers an IPFS file URL for the calling user's account, validating ownership.  |
+| `allow(address user)`                   | Grants another Ethereum address permission to access the caller's files.          |
+| `disallow(address user)`                | Revokes previously granted access.                                                |
+| `display(address _user)`                | Returns file URLs when the caller has the required access.                        |
+| `shareAccess()`                         | Returns the caller's recorded sharing permissions and associated access statuses. |
 
----
+## Troubleshooting
 
-## 🛠️ Common Troubleshooting
+### 1. MetaMask Transaction Errors
 
-<details>
-<summary><strong>1. MetaMask Error: "Nonce too high" or transaction stuck</strong></summary>
+If you encounter a nonce error or a transaction remains pending after restarting the local blockchain:
 
-When you restart `npx hardhat node`, the local blockchain resets to block 0, but MetaMask remembers past transactions:
-1. In MetaMask, go to **Settings** -> **Advanced**.
-2. Click **Clear activity and nonce data** (or **Reset Account** in older versions).
-3. Refresh the app and submit the transaction again.
-</details>
+1. Ensure the Hardhat node is running.
+2. Verify that MetaMask is connected to the correct local network.
+3. If necessary, use MetaMask's account reset option to clear local transaction history.
+4. Refresh the application and retry the transaction.
 
-<details>
-<summary><strong>2. Pinata Error: "401 Unauthorized" or "Unable to upload file to Pinata"</strong></summary>
+### 2. Pinata Authentication Errors
 
-- Double-check that your API Key and Secret in `client/.env` do not have trailing spaces or quotes.
-- Restart the client server (`npm run client`) after modifying `.env`.
-- Ensure your Pinata API key has pinning permissions enabled.
-</details>
+If uploads fail with a `401 Unauthorized` error:
 
-<details>
-<summary><strong>3. "Metamask is not installed" warning in app</strong></summary>
+* Verify the API credentials and required permissions.
+* Check the environment variable names and values.
+* Restart the React development server after changing environment variables.
+* Ensure the upload endpoint and gateway configuration are correct.
 
-Ensure you are using a browser with the MetaMask extension enabled (Chrome, Brave, Firefox, Edge) and that MetaMask is unlocked.
-</details>
+### 3. MetaMask Not Detected
 
----
+* Install and enable the MetaMask browser extension.
+* Unlock the wallet.
+* Refresh the application.
+* Confirm that the application can access the wallet provider.
 
-## 📄 License
+## License
 
-This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**. See the [LICENSE](https://www.gnu.org/licenses/gpl-3.0) for details.
