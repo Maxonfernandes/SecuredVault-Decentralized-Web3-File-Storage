@@ -236,6 +236,4 @@ If uploads fail with a `401 Unauthorized` error:
 * Refresh the application.
 * Confirm that the application can access the wallet provider.
 
-## License
 
-This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**. See the [LICENSE](https://www.gnu.org/licenses/gpl-3.0) for details.
